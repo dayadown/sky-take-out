@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         //密码MD5加密
-        password=DigestUtils.md5DigestAsHex(password.getBytes());
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         //密码比对
         if (!password.equals(employee.getPassword())) {
             //密码错误
@@ -67,14 +67,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 新增员工
+     *
      * @param employeeDTO
      */
     @Override
     public void save(EmployeeDTO employeeDTO) {
         // DTO转实体类
-        Employee employee=new Employee();
+        Employee employee = new Employee();
 
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         //补充实体类信息
         employee.setStatus(StatusConstant.ENABLE);
@@ -92,6 +93,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 员工分页查询
+     *
      * @param employeePageQueryDTO
      * @return
      */
@@ -99,11 +101,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     public PageResult page(EmployeePageQueryDTO employeePageQueryDTO) {
 
         //PageHelper通过ThreadLocal将页码和每页记录数存储在当前线程内存中，并在查询时自动拼接limit语句
-        PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
 
-        Page<Employee> page=employeeMapper.page(employeePageQueryDTO);
+        Page<Employee> page = employeeMapper.page(employeePageQueryDTO);
 
-        return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 账号启用禁用
+     *
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+
+        employeeMapper.update(employee);
     }
 
 }
