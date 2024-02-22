@@ -73,4 +73,16 @@ public class DishController {
         return Result.success(dishVO);
     }
 
+    /**
+     * 修改菜品接口
+     * @param dishDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("修改菜品")
+    public Result update(@RequestBody DishDTO dishDTO){
+        dishService.update(dishDTO);
+        return Result.success();
+    }
+
 }

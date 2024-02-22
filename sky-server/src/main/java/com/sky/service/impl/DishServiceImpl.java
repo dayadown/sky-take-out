@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.Utilities;
 import java.util.List;
 
 /**
@@ -128,5 +129,29 @@ public class DishServiceImpl implements DishService {
         dishVO.setFlavors(dishFlavors);
 
         return dishVO;
+    }
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     */
+    @Override
+    public void update(DishDTO dishDTO) {
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+        dishMapper.update(dish);
+
+        //删除原有的口味数据
+        dishFlavorMapper.delete(dishDTO.getId());
+
+        //口味菜品表中重新插入口味数据
+        List<DishFlavor> dishFlavors=dishDTO.getFlavors();
+        if(dishFlavors!=null && !dishFlavors.isEmpty()){
+            dishFlavors.forEach(dishFlavor -> {
+                dishFlavor.setDishId(dishDTO.getId());
+            });
+            dishFlavorMapper.insert(dishFlavors);
+        }
+
     }
 }
