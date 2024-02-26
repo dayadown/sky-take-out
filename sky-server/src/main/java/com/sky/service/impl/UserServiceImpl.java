@@ -55,6 +55,6 @@ public class UserServiceImpl implements UserService {
             userMapper.insert(byOpenId);
         }
 
-        return null;
+        return byOpenId;
     }
 }

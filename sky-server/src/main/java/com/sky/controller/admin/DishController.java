@@ -22,8 +22,23 @@ import java.util.List;
 @Api(tags = "菜品管理")
 public class DishController {
 
+
+
     @Autowired
     private DishService dishService;
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/list")
+    @ApiOperation("根据分类id查询菜品")
+    public Result<List<Dish>> list(Long categoryId){
+        List<Dish> list = dishService.list(categoryId);
+        return Result.success(list);
+    }
+
     /**
      * 新增菜品
      * @param dishDTO
