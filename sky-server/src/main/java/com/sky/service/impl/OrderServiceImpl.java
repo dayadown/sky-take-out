@@ -14,6 +14,7 @@ import com.sky.service.ShoppingCartService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.websocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.auditing.CurrentDateTimeProvider;
@@ -23,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -41,6 +44,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     public static Long orderId;
     /**
@@ -138,6 +144,12 @@ public class OrderServiceImpl implements OrderService {
         LocalDateTime check_out_time = LocalDateTime.now();
 
         orderMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, orderId);
+        //向商家页面推送消息
+        Map map = new HashMap();
+        map.put("type",1);
+        map.put("orderId",orderId);
+        map.put("content","订单号:"+ordersPaymentDTO.getOrderNumber());
+        webSocketServer.sendToAllClient(JSONObject.toJSONString(map));
         return vo;
     }
 
