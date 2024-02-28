@@ -17,7 +17,7 @@ public class OrderTask {
     /**
      * 处理支付超时订单
      */
-    @Scheduled(cron = "0 * * * * ? *")
+    @Scheduled(cron = "0 * * * * ?")
     public void timeoutOrder(){
         List<Orders> ordersList=orderMapper.getByStatusAndOrderTime(Orders.PENDING_PAYMENT, LocalDateTime.now().plusMinutes(-15));
         if(ordersList!=null && !ordersList.isEmpty()) {
@@ -34,7 +34,7 @@ public class OrderTask {
      * 订单需要在凌晨1点派送完成，否则自动完成(改进)
      * TODO 商家打烊后一个小时还处于派送中的订单自动完成
      */
-    @Scheduled(cron = "")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void dOrder(){
         List<Orders> ordersList=orderMapper.getByStatusAndOrderTime(Orders.DELIVERY_IN_PROGRESS, LocalDateTime.now().plusMinutes(-60));
         if(ordersList!=null && !ordersList.isEmpty()) {
