@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    //@Transactional
+    @Transactional
     public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) {
         Long userId = BaseContext.getCurrentId();
         //判断是否有地址
@@ -88,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
         order.setConsignee(addressBook.getConsignee());
         order.setUserId(userId);
         order.setStatus(Orders.PENDING_PAYMENT);
+        order.setAddress(addressBook.getProvinceName()+addressBook.getCityName()+addressBook.getDistrictName()+addressBook.getDetail());
         //订单数据库新增一条数据
         orderMapper.insert(order);
 
