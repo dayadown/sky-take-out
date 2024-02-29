@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -62,4 +63,12 @@ public interface OrderMapper {
      */
     @Select("select count(id) from orders where status = #{status}")
     Integer countStatus(Integer status);
+
+    @Select("select sum(amount) from orders where order_time>#{localDateTime1} and order_time<#{localDateTime2} and status=#{status}")
+    Double sumBy3(LocalDateTime localDateTime1, LocalDateTime localDateTime2, Integer status);
+
+    @Select("select count(id) from orders where order_time>#{begin} and order_time<#{end}")
+    Integer count(LocalDateTime begin, LocalDateTime end);
+    @Select("select count(id) from orders where order_time>#{localDateTimeBegin} and order_time<#{localDateTimeEnd} and status=#{status}")
+    Integer countValid(LocalDateTime localDateTimeBegin, LocalDateTime localDateTimeEnd,Integer status);
 }

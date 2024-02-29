@@ -9,4 +9,12 @@
             (#{oD.name},#{oD.image},#{oD.orderId},#{oD.dishId},#{oD.setmealId},#{oD.dishFlavor},#{oD.number},#{oD.amount})
         </foreach>
     </insert>
+    <select id="getNameAndNumber" resultType="com.sky.dto.GoodsSalesDTO">
+        select od.name,sum(od.number) number from order_detail od,orders o
+        where od.order_id=o.id
+          and o.order_time &gt; #{localDateTimeBegin} and o.order_time &lt; #{localDateTimeEnd}
+        group by od.name
+        order by number desc
+        limit 0,10
+    </select>
 </mapper>
