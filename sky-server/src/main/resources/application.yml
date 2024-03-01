@@ -20,6 +20,7 @@ spring:
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
+  #配置了该项，在xml中写resultType等，如果就在这个包下，就不用写完整的包名
   type-aliases-package: com.sky.entity
   configuration:
     #开启驼峰命名
